@@ -1,1 +1,20 @@
+html {
+    background-image: linear-gradient(to bottom, white 0%, #facd8a 100%);
+}
 
+
+body {
+    width: 1000px;
+    background-color: white;
+    margin: 15px auto;  
+    padding: 15px 1.5em; 
+    border: 1px solid black;
+    border-radius: 25px;
+    box-shadow: 5px 5px 0 0 black;
+
+    
+    background-image: url('../images/SH_orange.png'); 
+    background-repeat: repeat-y;
+    background-position: right;
+    background-attachment: fixed;
+}
