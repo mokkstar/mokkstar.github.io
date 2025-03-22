@@ -1,7 +1,7 @@
 body {
     width: 95%;
     margin: 15px auto;
-    background-image: url('SH_orange');
+    background-image: url('../images/SH_orange.png');
     background-position: right;
     background-repeat: repeat-y;
     background-attachment: fixed;
