@@ -1,0 +1,63 @@
+body {
+    width: 95%;
+    margin: 15px auto;
+    background-image: url('SH_orange.png');
+    background-position: right;
+    background-repeat: repeat-y;
+    background-attachment: fixed;
+}
+nav {
+    background-color: blue;
+}
+nav ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 2px solid black;
+    padding: 10px 0;
+}
+nav ul li {
+    display: inline;
+}
+nav ul li a {
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+}
+article {
+    width: 75%;
+    float: left;
+}
+aside {
+    width: 20%;
+    position: fixed;
+    right: 0;
+    top: 50px;
+}
+aside ul {
+    list-style-type: square;
+}
+h2 {
+    border-bottom: 1px solid black;
+}
+p {
+    text-indent: 30px;
+}
+p::first-letter {
+    font-size: 2em;
+    font-weight: bold;
+    font-style: italic;
+}
+.wrapped-image {
+    float: left;
+    margin-right: 15px;
+}
+footer {
+    text-align: center;
+    border-top: 2px solid black;
+    padding-top: 10px;
+}
+footer a {
+    text-decoration: none;
+    font-weight: bold;
+}
