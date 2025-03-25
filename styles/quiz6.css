@@ -73,19 +73,7 @@ html, body {
     margin-top: 0px;
     transform: rotate(-405deg);
     }
-    /*----end of menu*/
-    7. Right below the “end of menu”, add the following rules for the links:
-    a. For the section a, text-decoration: none and color: white.
-    b. For the .menu a:hover, a.current, text-decoration: underline.
-    8. For the article, set padding: 0 1em.
-    9. For the article h2, set font-size: 1.25em.
-    10. For the article p, set font-size: 1em.
-    11. For the article img, set margin: auto, display: block, width: 100%, and max-width: 760px.
-    a. Note: because an <img> is an inline element, in order for the auto margin to work to center the img on the page, we
-    need to change it to block.
-    b. You can change max-width to a proper px based on the native width of your image.
-    12. For the footer, set border-top: 2px solid #f46b45, text-align: center, and font-size: .8em.
-    13. Then, add following code for the media query with max-width: 700px.
+  
     .menu-button-container {
     display: flex;
     }
