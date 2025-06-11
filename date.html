@@ -166,6 +166,30 @@
     #restart-button:hover {
       background-color: #005fa3;
     }
+
+    /* Watermark style */
+    .watermark {
+      position: fixed;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      color: #c78bff;
+      font-style: italic;
+      text-shadow: 0 0 5px #c78bff, 0 0 10px #a950ff, 0 0 15px #8f00ff;
+      animation: glow 2s ease-in-out infinite alternate;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px #c78bff, 0 0 10px #a950ff, 0 0 15px #8f00ff;
+      }
+      to {
+        text-shadow: 0 0 10px #d3aaff, 0 0 20px #c26fff, 0 0 30px #aa00ff;
+      }
+    }
   </style>
 </head>
 <body>
@@ -209,8 +233,11 @@
   <!-- Confetti canvas -->
   <canvas id="confetti-canvas" style="position: fixed; pointer-events: none; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000;"></canvas>
 
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Glowing watermark -->
+  <div class="watermark">© Mokkstar</div>
 
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
     function handleClick(selection) {
       document.getElementById('spinner').style.animation = 'none';
