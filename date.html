@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Interactive Spinner Prize</title>
   <style>
     html, body {
@@ -37,6 +37,7 @@
       to { transform: rotate(360deg); }
     }
 
+    /* positions for emojis */
     .emoji:nth-child(1) { top: 10%; left: 5%; }
     .emoji:nth-child(2) { top: 20%; right: 10%; }
     .emoji:nth-child(3) { bottom: 15%; left: 20%; }
@@ -91,22 +92,26 @@
     }
 
     .intro-message {
-      font-size: 5vw;
+      font-size: 2.5rem; /* bigger on desktop */
       font-weight: bold;
       color: purple;
       margin-bottom: 5vh;
-      max-width: 90vw;
+      max-width: 700px;
       z-index: 3;
+      line-height: 1.2;
     }
 
     .split-spinner {
-      width: 60vw;
-      height: 60vw;
+      width: 450px;
+      height: 450px;
       position: relative;
       animation: spin 2s linear infinite;
       z-index: 3;
-      max-width: 300px;
-      max-height: 300px;
+      max-width: 90vw;
+      max-height: 90vw;
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      cursor: pointer;
     }
 
     .half-circle {
@@ -114,17 +119,22 @@
       height: 100%;
       position: absolute;
       border-radius: 50%;
-      cursor: pointer;
     }
 
     .left {
-      background-color: red;      /* LEFT HALF: RED for 0-5 */
-      clip: rect(0px, 50%, 100%, 0px);
+      background-color: red; /* LEFT HALF: RED for 0-5 */
+      clip: rect(0px, 225px, 450px, 0px);
+      left: 0;
+      top: 0;
+      z-index: 4;
     }
 
     .right {
-      background-color: green;    /* RIGHT HALF: GREEN for 6-10 */
-      clip: rect(0px, 100%, 100%, 50%);
+      background-color: green; /* RIGHT HALF: GREEN for 6-10 */
+      clip: rect(0px, 450px, 450px, 225px);
+      right: 0;
+      top: 0;
+      z-index: 5;
     }
 
     .labels {
@@ -134,12 +144,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 5vw;
+      font-size: 2.5rem;
       font-weight: bold;
       color: white;
       padding: 0 5%;
       pointer-events: none;
-      z-index: 3;
+      z-index: 6;
+      user-select: none;
     }
 
     @keyframes spin {
@@ -151,13 +162,13 @@
     #main-content {
       display: none;
       text-align: center;
-      padding: 8vw;
+      padding: 6vw 10vw;
       z-index: 2;
       position: relative;
     }
 
     #prize-message {
-      font-size: 6vw;
+      font-size: 3.5rem;
       font-weight: bold;
       color: red;
       margin-top: 5vh;
@@ -165,33 +176,35 @@
 
     #date-message {
       margin-top: 4vh;
-      font-size: 4vw;
+      font-size: 1.8rem;
       text-align: left;
-      max-width: 90vw;
+      max-width: 700px;
       margin-left: auto;
       margin-right: auto;
       background-color: #fdf4f4;
       border: 2px dashed #aaa;
-      padding: 4vw;
+      padding: 3rem;
       border-radius: 12px;
       line-height: 1.6;
+      white-space: pre-wrap;
     }
 
     #date-message strong {
       color: #008000;
-      font-size: 5vw;
+      font-size: 2rem;
     }
 
     #restart-button {
       margin-top: 4vh;
-      padding: 2vw 4vw;
-      font-size: 4vw;
+      padding: 1rem 3rem;
+      font-size: 1.8rem;
       cursor: pointer;
       background-color: #0077cc;
       color: white;
       border: none;
       border-radius: 8px;
       z-index: 3;
+      transition: background-color 0.3s ease;
     }
 
     #restart-button:hover {
@@ -204,7 +217,7 @@
       bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 14px;
+      font-size: 1rem;
       color: #c78bff;
       font-style: italic;
       text-shadow: 0 0 5px #c78bff, 0 0 10px #a950ff, 0 0 15px #8f00ff;
@@ -223,10 +236,11 @@
     }
 
     /* Responsive adjustments */
-    @media (max-width: 400px) {
+    @media (max-width: 600px) {
       .intro-message {
-        font-size: 6vw;
+        font-size: 5vw;
         margin-bottom: 4vh;
+        max-width: 90vw;
       }
       .split-spinner {
         width: 80vw;
@@ -243,6 +257,7 @@
       #date-message {
         font-size: 5vw;
         padding: 3vw;
+        max-width: 90vw;
       }
       #restart-button {
         font-size: 5vw;
@@ -250,6 +265,12 @@
       }
       .spinner-emoji {
         font-size: 24px;
+      }
+      #date-message strong {
+        font-size: 5vw;
+      }
+      .watermark {
+        font-size: 0.8rem;
       }
     }
   </style>
@@ -312,7 +333,7 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
     function handleClick(selection) {
-      // Add vibration on supported devices
+      // Vibration on supported devices
       if (navigator.vibrate) {
         navigator.vibrate(200);
       }
