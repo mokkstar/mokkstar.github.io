@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Interactive Spinner Prize</title>
   <style>
     * {
@@ -31,6 +31,8 @@
       font-size: 32px;
       opacity: 0.3;
       animation: spinEmoji 10s linear infinite;
+      user-select: none;
+      pointer-events: none;
     }
 
     @keyframes spinEmoji {
@@ -77,6 +79,7 @@
       position: relative;
       animation: spin 2s linear infinite;
       z-index: 2;
+      touch-action: manipulation;
     }
 
     .half-circle {
@@ -85,6 +88,8 @@
       position: absolute;
       border-radius: 50%;
       cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .left {
@@ -109,6 +114,7 @@
       color: white;
       padding: 0 20px;
       pointer-events: none;
+      user-select: none;
     }
 
     @keyframes spin {
@@ -123,6 +129,8 @@
       padding: 40px;
       z-index: 2;
       position: relative;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     #prize-message {
@@ -144,6 +152,7 @@
       padding: 20px;
       border-radius: 12px;
       line-height: 1.6;
+      white-space: pre-line;
     }
 
     #date-message strong {
@@ -161,6 +170,7 @@
       border: none;
       border-radius: 8px;
       transition: background-color 0.3s;
+      user-select: none;
     }
 
     #restart-button:hover {
@@ -180,6 +190,7 @@
       animation: glow 2s ease-in-out infinite alternate;
       z-index: 9999;
       pointer-events: none;
+      user-select: none;
     }
 
     @keyframes glow {
@@ -190,12 +201,53 @@
         text-shadow: 0 0 10px #d3aaff, 0 0 20px #c26fff, 0 0 30px #aa00ff;
       }
     }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .split-spinner, .half-circle {
+        width: 200px;
+        height: 200px;
+      }
+
+      .half-circle.left {
+        clip: rect(0px, 100px, 200px, 0px);
+      }
+
+      .half-circle.right {
+        clip: rect(0px, 200px, 200px, 100px);
+      }
+
+      .labels {
+        width: 200px;
+        height: 200px;
+        font-size: 18px;
+        padding: 0 12px;
+      }
+
+      #main-content {
+        padding: 20px;
+      }
+
+      .intro-message {
+        font-size: 18px;
+        max-width: 90%;
+      }
+
+      #prize-message {
+        font-size: 28px;
+      }
+
+      #date-message {
+        font-size: 16px;
+        max-width: 90%;
+      }
+    }
   </style>
 </head>
 <body>
 
   <!-- Scattered Emojis -->
-  <div id="emoji-background">
+  <div id="emoji-background" aria-hidden="true">
     <div class="emoji">🌻</div>
     <div class="emoji">🎓</div>
     <div class="emoji">🌻</div>
@@ -208,14 +260,14 @@
   </div>
 
   <!-- Loader with spinner -->
-  <div id="loader-screen">
-    <div class="intro-message">
+  <div id="loader-screen" role="main">
+    <div class="intro-message" id="intro-message">
       Hello Crissy, select below a number based on how much you are feeling Mokkstar. Good Luck!
     </div>
-    <div class="split-spinner" id="spinner">
-      <div class="half-circle left" onclick="handleClick('0–5')"></div>
-      <div class="half-circle right" onclick="handleClick('6–10')"></div>
-      <div class="labels">
+    <div class="split-spinner" id="spinner" aria-label="Spinner with two selectable halves">
+      <div class="half-circle left" role="button" tabindex="0" aria-label="Select 0 to 5" onclick="handleClick('0-5')" onkeydown="if(event.key==='Enter') handleClick('0-5')"></div>
+      <div class="half-circle right" role="button" tabindex="0" aria-label="Select 6 to 10" onclick="handleClick('6-10')" onkeydown="if(event.key==='Enter') handleClick('6-10')"></div>
+      <div class="labels" aria-hidden="true">
         <div>0–5</div>
         <div>6–10</div>
       </div>
@@ -223,41 +275,55 @@
   </div>
 
   <!-- Main content -->
-  <div id="main-content">
-    <h1>Welcome!</h1>
+  <div id="main-content" role="region" aria-live="polite">
+    <h1 id="result-title">Welcome!</h1>
     <div id="prize-message"></div>
     <div id="date-message"></div>
-    <button id="restart-button" onclick="restart()">Restart</button>
+    <button id="restart-button" onclick="restart()" aria-label="Restart the spinner">Restart</button>
   </div>
 
   <!-- Confetti canvas -->
   <canvas id="confetti-canvas" style="position: fixed; pointer-events: none; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000;"></canvas>
 
   <!-- Glowing watermark -->
-  <div class="watermark">© Mokkstar</div>
+  <div class="watermark" aria-hidden="true">© Mokkstar</div>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
+    // Ensure spinner is spinning on load
+    const spinner = document.getElementById('spinner');
+    spinner.style.animation = 'spin 2s linear infinite';
+
     function handleClick(selection) {
-      document.getElementById('spinner').style.animation = 'none';
+      // Stop spinner immediately on click
+      spinner.style.animation = 'none';
+
+      // Hide loader screen and show main content
       document.getElementById('loader-screen').style.display = 'none';
-      document.getElementById('main-content').style.display = 'block';
+      const mainContent = document.getElementById('main-content');
+      mainContent.style.display = 'block';
+
+      // Clear previous messages
       document.getElementById('prize-message').innerText = '';
       document.getElementById('date-message').innerHTML = '';
 
-      if (selection === '0–5') {
+      if (selection === '0-5') {
         document.getElementById('prize-message').innerText = "You have won a Sonic hot dog!";
-      } else if (selection === '6–10') {
+      } else if (selection === '6-10') {
         document.getElementById('date-message').innerHTML = `
-          <strong>Hello lovely woman,</strong><br><br>
-          Upcoming Date night with Sir Mokk.<br><br>
-          <strong>Date:</strong> Sunday, 15th of June or rescheduled date if needed<br><br>
-          <strong>Activities:</strong><br>
-          - Place: Flower Child – health is wealth!<br>
-          - Casual Paint and Sip at park (Supplies provided by me)<br>
+          <strong>Hello lovely woman,</strong>
+
+          Upcoming Date night with Sir Mokk.
+
+          <strong>Date:</strong> Sunday, 15th of June or rescheduled date if needed
+
+          <strong>Activities:</strong>
+          - Place: Flower Child – health is wealth!
+          - Casual Paint and Sip at park (Supplies provided by me)
           - End the night off with a sweet treat.
         `;
+
         confetti({
           particleCount: 150,
           spread: 100,
@@ -267,9 +333,14 @@
     }
 
     function restart() {
+      // Show loader, hide main content
       document.getElementById('main-content').style.display = 'none';
       document.getElementById('loader-screen').style.display = 'flex';
-      document.getElementById('spinner').style.animation = 'spin 2s linear infinite';
+
+      // Restart spinner animation
+      spinner.style.animation = 'spin 2s linear infinite';
+
+      // Clear messages
       document.getElementById('prize-message').innerText = '';
       document.getElementById('date-message').innerHTML = '';
     }
