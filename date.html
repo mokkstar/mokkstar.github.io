@@ -1,374 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Interactive Spinner Prize</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      background-color: #fffbe6;
-      overflow: hidden;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spinner Selection</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0 0 50px 0; /* bottom padding so watermark isn't blocked */
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #fffbe6;
+    /* allow vertical scroll */
+    overflow-y: auto;
+    position: relative;
+  }
 
-    /* Emoji background */
-    #emoji-background {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      overflow: hidden;
-    }
+  /* Background emoji scatter */
+  .emoji-background {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .emoji {
+    position: absolute;
+    font-size: 2.2rem;
+    user-select: none;
+    animation: floatUp 20s linear infinite;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh); }
+    100% { transform: translateY(-10vh); }
+  }
 
-    .emoji {
-      position: absolute;
-      font-size: 24px;
-      opacity: 0.3;
-      animation: spinEmoji 10s linear infinite;
-      user-select: none;
-      pointer-events: none;
-    }
+  /* Intro message */
+  .intro-message {
+    color: purple;
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
+    margin: 3vh auto 4vh auto;
+    max-width: 600px;
+    z-index: 5;
+    position: relative;
+  }
 
-    @keyframes spinEmoji {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
+  /* Spinner container */
+  .split-spinner {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    animation: spin 2s linear infinite;
+    z-index: 3;
+    max-width: 90vw;
+    max-height: 90vw;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    cursor: pointer;
+    margin: 0 auto;
+    background: transparent;
+  }
+  .half {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    overflow: hidden;
+    border-radius: 150px 0 0 150px; /* rounded half circle */
+  }
+  .half.right {
+    right: 0;
+    border-radius: 0 150px 150px 0;
+  }
+  .half .half-circle {
+    width: 200%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    top: 0; left: 0;
+  }
 
-    /* positions for emojis */
-    .emoji:nth-child(1) { top: 10%; left: 5%; }
-    .emoji:nth-child(2) { top: 20%; right: 10%; }
-    .emoji:nth-child(3) { bottom: 15%; left: 20%; }
-    .emoji:nth-child(4) { top: 35%; right: 25%; }
-    .emoji:nth-child(5) { top: 50%; left: 40%; }
-    .emoji:nth-child(6) { bottom: 40%; right: 30%; }
-    .emoji:nth-child(7) { top: 70%; left: 60%; }
-    .emoji:nth-child(8) { bottom: 10%; right: 10%; }
-    .emoji:nth-child(9) { top: 80%; left: 10%; }
+  /* Colors and fill for halves */
+  .half.left .half-circle {
+    background-color: red;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  }
+  .half.right .half-circle {
+    background-color: green;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    left: -100%;
+  }
 
-    /* Sunflower emojis on spinner page */
-    #spinner-emojis {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0; left: 0;
-      pointer-events: none;
-      z-index: 1; /* Above background emojis, below spinner and text */
-    }
+  /* Labels */
+  .labels {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    color: white;
+    font-weight: bold;
+    font-size: 1.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    pointer-events: none;
+  }
+  .labels.left {
+    left: 0;
+  }
+  .labels.right {
+    right: 0;
+  }
 
-    .spinner-emoji {
-      position: absolute;
-      font-size: 30px;
-      user-select: none;
-      animation: float 6s ease-in-out infinite alternate;
-      opacity: 0.6;
-    }
+  /* Spin animation */
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
 
-    .spinner-emoji:nth-child(1) { top: 15%; left: 25%; animation-delay: 0s; }
-    .spinner-emoji:nth-child(2) { top: 35%; right: 20%; animation-delay: 1.5s; }
-    .spinner-emoji:nth-child(3) { top: 60%; left: 30%; animation-delay: 3s; }
-    .spinner-emoji:nth-child(4) { top: 50%; right: 35%; animation-delay: 4.5s; }
-    .spinner-emoji:nth-child(5) { top: 25%; left: 45%; animation-delay: 2s; }
+  /* Prize message */
+  #prize-message {
+    color: red;
+    font-weight: bold;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-top: 4vh;
+    z-index: 5;
+  }
 
-    @keyframes float {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-15px); }
-    }
+  /* Date message */
+  #date-message {
+    color: #064;
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin: 3vh auto 0 auto;
+    max-width: 600px;
+    padding: 2rem;
+    white-space: pre-line;
+    text-align: center;
+    z-index: 5;
+  }
 
-    #loader-screen {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background-color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 2;
-      text-align: center;
-      padding: 5vw;
-    }
+  /* Buttons */
+  #restart-button, #reset-button {
+    display: block;
+    margin: 3vh auto 0 auto;
+    padding: 0.8rem 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 5;
+    user-select: none;
+    box-shadow: 0 0 8px #888;
+  }
+  #restart-button {
+    background-color: purple;
+    color: white;
+  }
+  #reset-button {
+    background-color: #555;
+    color: white;
+  }
+  #restart-button:hover {
+    background-color: darkmagenta;
+  }
+  #reset-button:hover {
+    background-color: #333;
+  }
 
-    .intro-message {
-      font-size: 2.5rem; /* bigger on desktop */
-      font-weight: bold;
-      color: purple;
-      margin-bottom: 5vh;
-      max-width: 700px;
-      z-index: 3;
-      line-height: 1.2;
-    }
+  /* Copyright watermark */
+  #copyright-watermark {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1rem;
+    color: rgba(0,0,0,0.2);
+    user-select: none;
+    pointer-events: none;
+    font-weight: 700;
+    text-shadow:
+       0 0 5px #dba800,
+       0 0 10px #f9d71c,
+       0 0 15px #ffd633,
+       0 0 20px #f5c100;
+    z-index: 6;
+  }
 
+  /* Confetti container */
+  #confetti-container {
+    pointer-events: none;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0; left: 0;
+    overflow: visible;
+    z-index: 10;
+  }
+
+  /* Responsive for smaller screens */
+  @media (max-width: 600px) {
     .split-spinner {
-      width: 450px;
-      height: 450px;
-      position: relative;
-      animation: spin 2s linear infinite;
-      z-index: 3;
-      max-width: 90vw;
-      max-height: 90vw;
-      border-radius: 50%;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
-      cursor: pointer;
+      width: 80vw;
+      height: 80vw;
     }
-
-    .half-circle {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      border-radius: 50%;
-    }
-
-    .left {
-      background-color: red; /* LEFT HALF: RED for 0-5 */
-      clip: rect(0px, 225px, 450px, 0px);
-      left: 0;
-      top: 0;
-      z-index: 4;
-    }
-
-    .right {
-      background-color: green; /* RIGHT HALF: GREEN for 6-10 */
-      clip: rect(0px, 450px, 450px, 225px);
-      right: 0;
-      top: 0;
-      z-index: 5;
-    }
-
     .labels {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: white;
-      padding: 0 5%;
-      pointer-events: none;
-      z-index: 6;
-      user-select: none;
+      font-size: 6vw;
     }
-
-    @keyframes spin {
-      100% {
-        transform: rotate(360deg);
-      }
+    .intro-message {
+      font-size: 5vw;
+      max-width: 90vw;
     }
-
-    #main-content {
-      display: none;
-      text-align: center;
-      padding: 6vw 10vw;
-      z-index: 2;
-      position: relative;
-    }
-
     #prize-message {
-      font-size: 3.5rem;
-      font-weight: bold;
-      color: red;
-      margin-top: 5vh;
+      font-size: 7vw;
     }
-
     #date-message {
-      margin-top: 4vh;
-      font-size: 1.8rem;
-      text-align: left;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-      background-color: #fdf4f4;
-      border: 2px dashed #aaa;
-      padding: 3rem;
-      border-radius: 12px;
-      line-height: 1.6;
-      white-space: pre-wrap;
+      font-size: 5vw;
+      max-width: 90vw;
+      padding: 3vw;
     }
-
-    #date-message strong {
-      color: #008000;
-      font-size: 2rem;
+    #restart-button, #reset-button {
+      font-size: 5vw;
+      padding: 3vw 5vw;
     }
-
-    #restart-button {
-      margin-top: 4vh;
-      padding: 1rem 3rem;
-      font-size: 1.8rem;
-      cursor: pointer;
-      background-color: #0077cc;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      z-index: 3;
-      transition: background-color 0.3s ease;
-    }
-
-    #restart-button:hover {
-      background-color: #005fa3;
-    }
-
-    /* Glowing watermark style */
-    .watermark {
-      position: fixed;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 1rem;
-      color: #c78bff;
-      font-style: italic;
-      text-shadow: 0 0 5px #c78bff, 0 0 10px #a950ff, 0 0 15px #8f00ff;
-      animation: glow 2s ease-in-out infinite alternate;
-      z-index: 9999;
-      pointer-events: none;
-    }
-
-    @keyframes glow {
-      from {
-        text-shadow: 0 0 5px #c78bff, 0 0 10px #a950ff, 0 0 15px #8f00ff;
-      }
-      to {
-        text-shadow: 0 0 10px #d3aaff, 0 0 20px #c26fff, 0 0 30px #aa00ff;
-      }
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 600px) {
-      .intro-message {
-        font-size: 5vw;
-        margin-bottom: 4vh;
-        max-width: 90vw;
-      }
-      .split-spinner {
-        width: 80vw;
-        height: 80vw;
-        max-width: none;
-        max-height: none;
-      }
-      .labels {
-        font-size: 6vw;
-      }
-      #prize-message {
-        font-size: 7vw;
-      }
-      #date-message {
-        font-size: 5vw;
-        padding: 3vw;
-        max-width: 90vw;
-      }
-      #restart-button {
-        font-size: 5vw;
-        padding: 3vw 5vw;
-      }
-      .spinner-emoji {
-        font-size: 24px;
-      }
-      #date-message strong {
-        font-size: 5vw;
-      }
-      .watermark {
-        font-size: 0.8rem;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
 
-  <!-- Background Emojis -->
-  <div id="emoji-background">
-    <div class="emoji">🌻</div>
-    <div class="emoji">🎓</div>
-    <div class="emoji">🌻</div>
-    <div class="emoji">🎓</div>
-    <div class="emoji">🌻</div>
-    <div class="emoji">🎓</div>
-    <div class="emoji">🌻</div>
-    <div class="emoji">🎓</div>
-    <div class="emoji">🌻</div>
+<div class="emoji-background" aria-hidden="true">
+  <!-- scattered sunflowers and graduation caps -->
+</div>
+
+<div class="intro-message" id="intro-message">
+  Hello Crissy, select below a number based on how much you are feeling mokkstar, Good Luck! 🌻🎓
+</div>
+
+<div class="split-spinner" id="spinner" role="button" aria-label="Number spinner selection" tabindex="0" aria-live="polite" aria-atomic="true">
+  <div class="half left" data-half="0-5" aria-hidden="true">
+    <div class="half-circle"></div>
   </div>
-
-  <!-- Spinner Screen -->
-  <div id="loader-screen">
-    <div class="intro-message">
-      Hello Crissy, select below a number based on how much you are feeling Mokkstar. Good Luck!
-    </div>
-
-    <!-- Sunflower emojis scattered on spinner page -->
-    <div id="spinner-emojis">
-      <div class="spinner-emoji" style="top: 15%; left: 25%;">🌻</div>
-      <div class="spinner-emoji" style="top: 35%; right: 20%;">🌻</div>
-      <div class="spinner-emoji" style="top: 60%; left: 30%;">🌻</div>
-      <div class="spinner-emoji" style="top: 50%; right: 35%;">🌻</div>
-      <div class="spinner-emoji" style="top: 25%; left: 45%;">🌻</div>
-    </div>
-
-    <div class="split-spinner" id="spinner">
-      <div class="half-circle left" onclick="handleClick('0–5')"></div>
-      <div class="half-circle right" onclick="handleClick('6–10')"></div>
-      <div class="labels">
-        <div>0–5</div>
-        <div>6–10</div>
-      </div>
-    </div>
+  <div class="half right" data-half="6-10" aria-hidden="true">
+    <div class="half-circle"></div>
   </div>
+  <div class="labels left">0 - 5</div>
+  <div class="labels right">6 - 10</div>
+</div>
 
-  <!-- Message Screen -->
-  <div id="main-content">
-    <h1>Welcome!</h1>
-    <div id="prize-message"></div>
-    <div id="date-message"></div>
-    <button id="restart-button" onclick="restart()">Restart</button>
-  </div>
+<div id="prize-message" aria-live="polite"></div>
+<div id="date-message" aria-live="polite"></div>
 
-  <!-- Confetti -->
-  <canvas id="confetti-canvas" style="position: fixed; pointer-events: none; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000;"></canvas>
+<button id="restart-button" style="display:none;">Restart</button>
+<button id="reset-button" style="display:none;">Reset</button>
 
-  <!-- Watermark -->
-  <div class="watermark">© Mokkstar</div>
+<div id="confetti-container"></div>
 
-  <!-- Confetti Script -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script>
-    function handleClick(selection) {
-      // Vibration on supported devices
-      if (navigator.vibrate) {
-        navigator.vibrate(200);
-      }
+<div id="copyright-watermark">© Mokkstar</div>
 
-      document.getElementById('spinner').style.animation = 'none';
-      document.getElementById('loader-screen').style.display = 'none';
-      document.getElementById('main-content').style.display = 'block';
-      document.getElementById('prize-message').innerText = '';
-      document.getElementById('date-message').innerHTML = '';
+<script>
+  // Add emoji scatter
+  const emojiBackground = document.querySelector('.emoji-background');
+  const emojis = ['🌻', '🎓'];
+  const count = 30;
+  for (let i = 0; i < count; i++) {
+    const span = document.createElement('span');
+    span.classList.add('emoji');
+    span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    span.style.left = Math.random() * 100 + 'vw';
+    span.style.top = Math.random() * 100 + 'vh';
+    span.style.fontSize = (Math.random() * 24 + 18) + 'px';
+    span.style.animationDuration = (15 + Math.random() * 15) + 's';
+    emojiBackground.appendChild(span);
+  }
 
-      if (selection === '0–5') {
-        document.getElementById('prize-message').innerText = "You have won a Sonic hot dog!";
-      } else if (selection === '6–10') {
-        document.getElementById('date-message').innerHTML = `
-          <strong>Hello lovely woman,</strong><br><br>
-          Upcoming Date night with Sir Mokk.<br><br>
-          <strong>Date:</strong> Sunday, 15th of June or rescheduled date if needed<br><br>
-          <strong>Activities:</strong><br>
-          - Place: Flower Child – health is wealth!<br>
-          - Casual Paint and Sip at park (Supplies provided by me)<br>
-          - End the night off with a sweet treat.
-        `;
-        confetti({
-          particleCount: 150,
-          spread: 100,
-          origin: { y: 0.6 }
-        });
-      }
+  const spinner = document.getElementById('spinner');
+  const prizeMessage = document.getElementById('prize-message');
+  const dateMessage = document.getElementById('date-message');
+  const restartButton = document.getElementById('restart-button');
+  const resetButton = document.getElementById('reset-button');
+  const confettiContainer = document.getElementById('confetti-container');
+
+  let spinning = true;
+
+  // Spin stops when half clicked
+  function stopSpin() {
+    spinner.style.animationPlayState = 'paused';
+    spinning = false;
+  }
+
+  function startSpin() {
+    spinner.style.animationPlayState = 'running';
+    spinning = true;
+  }
+
+  // Confetti effect
+  function createConfetti() {
+    const colors = ['#FFC700', '#FF0000', '#2E3191', '#41BBC7', '#7326C5'];
+    for (let i = 0; i < 150; i++) {
+      const confetti = document.createElement('div');
+      confetti.style.position = 'absolute';
+      confetti.style.width = '8px';
+      confetti.style.height = '8px';
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.left = Math.random() * window.innerWidth + 'px';
+      confetti.style.top = Math.random() * window.innerHeight + 'px';
+      confetti.style.opacity = Math.random();
+      confetti.style.borderRadius = '50%';
+      confetti.style.animation = `confetti-fall ${3 + Math.random() * 3}s linear forwards`;
+      confettiContainer.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 6000);
     }
+  }
 
-    function restart() {
-      document.getElementById('main-content').style.display = 'none';
-      document.getElementById('loader-screen').style.display = 'flex';
-      document.getElementById('spinner').style.animation = 'spin 2s linear infinite';
+  // Confetti animation keyframe
+  const styleElem = document.createElement('style');
+  styleElem.textContent = `
+    @keyframes confetti-fall {
+      0% { transform: translateY(0) rotate(0deg);}
+      100% { transform: translateY(100vh) rotate(360deg);}
     }
-  </script>
+  `;
+  document.head.appendChild(styleElem);
+
+  // Touch vibration
+  function vibrate() {
+    if (navigator.vibrate) {
+      navigator.vibrate(100);
+    }
+  }
+
+  // Click handling
+  spinner.addEventListener('click', e => {
+    if (!spinning) return; // Already stopped
+
+    // Determine if click is on left or right half
+    const rect = spinner.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const half = clickX < rect.width / 2 ? '0-5' : '6-10';
+
+    stopSpin();
+    vibrate();
+
+    if (half === '0-5') {
+      prizeMessage.textContent = "You have won a sonic hot dog";
+      prizeMessage.style.color = 'red';
+      dateMessage.textContent = '';
+      restartButton.style.display = 'block';
+      resetButton.style.display = 'none';
+      confettiContainer.innerHTML = '';
+    } else {
+      prizeMessage.textContent = '';
+      dateMessage.textContent = 
+`Hello lovely woman, Upcoming Date night with Sir Mokk.
+
+Date : sunday , 15th of june or rescheduled date if needed
+
+Activities 
+Place : Flower child - health is wealth!
+
+Casual Paint and Sip at park (Supplies provided by me)
+
+End the night off with a sweet treat.`;
+      restartButton.style.display = 'none';
+      resetButton.style.display = 'block';
+      createConfetti();
+    }
+  });
+
+  restartButton.addEventListener('click', () => {
+    prizeMessage.textContent = '';
+    dateMessage.textContent = '';
+    restartButton.style.display = 'none';
+    resetButton.style.display = 'none';
+    confettiContainer.innerHTML = '';
+    startSpin();
+  });
+
+  resetButton.addEventListener('click', () => {
+    prizeMessage.textContent = '';
+    dateMessage.textContent = '';
+    restartButton.style.display = 'none';
+    resetButton.style.display = 'none';
+    confettiContainer.innerHTML = '';
+    startSpin();
+  });
+
+  // Keyboard accessibility (Enter/Space to select half)
+  spinner.addEventListener('keydown', e => {
+    if (!spinning) return;
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      // Default select left half on keyboard
+      stopSpin();
+      vibrate();
+      prizeMessage.textContent = "You have won a sonic hot dog";
+      prizeMessage.style.color = 'red';
+      dateMessage.textContent = '';
+      restartButton.style.display = 'block';
+      resetButton.style.display = 'none';
+      confettiContainer.innerHTML = '';
+    }
+  });
+
+</script>
 </body>
 </html>
