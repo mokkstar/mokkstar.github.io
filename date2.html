@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Spinner Prize</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #fffbe6;
+      overflow: hidden;
+    }
+
+    /* Emoji background */
+    #emoji-background {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .emoji {
+      position: absolute;
+      font-size: 24px;
+      opacity: 0.3;
+      animation: spinEmoji 10s linear infinite;
+    }
+
+    @keyframes spinEmoji {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .emoji:nth-child(1) { top: 10%; left: 5%; }
+    .emoji:nth-child(2) { top: 20%; right: 10%; }
+    .emoji:nth-child(3) { bottom: 15%; left: 20%; }
+    .emoji:nth-child(4) { top: 35%; right: 25%; }
+    .emoji:nth-child(5) { top: 50%; left: 40%; }
+    .emoji:nth-child(6) { bottom: 40%; right: 30%; }
+    .emoji:nth-child(7) { top: 70%; left: 60%; }
+    .emoji:nth-child(8) { bottom: 10%; right: 10%; }
+    .emoji:nth-child(9) { top: 80%; left: 10%; }
+
+    #loader-screen {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+      text-align: center;
+      padding: 5vw;
+    }
+
+    .intro-message {
+      font-size: 5vw;
+      font-weight: bold;
+      color: purple;
+      margin-bottom: 5vh;
+      max-width: 90vw;
+      z-index: 2;
+    }
+
+    .split-spinner {
+      width: 60vw;
+      height: 60vw;
+      position: relative;
+      animation: spin 2s linear infinite;
+      z-index: 2;
+      max-width: 300px;
+      max-height: 300px;
+    }
+
+    .half-circle {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .left {
+      background-color: red;
+      clip: rect(0px, 50%, 100%, 0px);
+    }
+
+    .right {
+      background-color: green;
+      clip: rect(0px, 100%, 100%, 50%);
+    }
+
+    .labels {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 5vw;
+      font-weight: bold;
+      color: white;
+      padding: 0 5%;
+      pointer-events: none;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    #main-content {
+      display: none;
+      text-align: center;
+      padding: 8vw;
+      z-index: 2;
+      position: relative;
+    }
+
+    #prize-message {
+      font-size: 6vw;
+      font-weight: bold;
+      color: red;
+      margin-top: 5vh;
+    }
+
+    #date-message {
+      margin-top: 4vh;
+      font-size: 4vw;
+      text-align: left;
+      max-width: 90vw;
+      margin-left: auto;
+      margin-right: auto;
+      background-color: #fdf4f4;
+      border: 2px dashed #aaa;
+      padding: 4vw;
+      border-radius: 12px;
+      line-height: 1.6;
+    }
+
+    #date-message strong {
+      color: #008000;
+      font-size: 5vw;
+    }
+
+    #restart-button {
+      margin-top: 4vh;
+      padding: 2vw 4vw;
+      font-size: 4vw;
+      cursor: pointer;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+    }
+
+    #restart-button:hover {
+      background-color: #005fa3;
+    }
+
+    /* Glowing watermark style */
+    .watermark {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      color: #c78bff;
+      font-style: italic;
+      text-shadow: 0 0 5px #c78bff, 0 0 10px #a950ff, 0 0 15px #8f00ff;
+      animation: glow 2s ease-in-out infinite alternate;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px #c78bff, 0 0 10px #a950ff, 0 0 15px #8f00ff;
+      }
+      to {
+        text-shadow: 0 0 10px #d3aaff, 0 0 20px #c26fff, 0 0 30px #aa00ff;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Emojis -->
+  <div id="emoji-background">
+    <div class="emoji">🌻</div>
+    <div class="emoji">🎓</div>
+    <div class="emoji">🌻</div>
+    <div class="emoji">🎓</div>
+    <div class="emoji">🌻</div>
+    <div class="emoji">🎓</div>
+    <div class="emoji">🌻</div>
+    <div class="emoji">🎓</div>
+    <div class="emoji">🌻</div>
+  </div>
+
+  <!-- Spinner Screen -->
+  <div id="loader-screen">
+    <div class="intro-message">
+      Hello Crissy, select below a number based on how much you are feeling Mokkstar. Good Luck!
+    </div>
+    <div class="split-spinner" id="spinner">
+      <div class="half-circle left" onclick="handleClick('0–5')"></div>
+      <div class="half-circle right" onclick="handleClick('6–10')"></div>
+      <div class="labels">
+        <div>0–5</div>
+        <div>6–10</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message Screen -->
+  <div id="main-content">
+    <h1>Welcome!</h1>
+    <div id="prize-message"></div>
+    <div id="date-message"></div>
+    <button id="restart-button" onclick="restart()">Restart</button>
+  </div>
+
+  <!-- Confetti -->
+  <canvas id="confetti-canvas" style="position: fixed; pointer-events: none; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000;"></canvas>
+
+  <!-- Watermark -->
+  <div class="watermark">© Mokkstar</div>
+
+  <!-- Confetti Script -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    function handleClick(selection) {
+      // Add vibration on supported devices
+      if (navigator.vibrate) {
+        navigator.vibrate(200);
+      }
+
+      document.getElementById('spinner').style.animation = 'none';
+      document.getElementById('loader-screen').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+      document.getElementById('prize-message').innerText = '';
+      document.getElementById('date-message').innerHTML = '';
+
+      if (selection === '0–5') {
+        document.getElementById('prize-message').innerText = "You have won a Sonic hot dog!";
+      } else if (selection === '6–10') {
+        document.getElementById('date-message').innerHTML = `
+          <strong>Hello lovely woman,</strong><br><br>
+          Upcoming Date night with Sir Mokk.<br><br>
+          <strong>Date:</strong> Sunday, 15th of June or rescheduled date if needed<br><br>
+          <strong>Activities:</strong><br>
+          - Place: Flower Child – health is wealth!<br>
+          - Casual Paint and Sip at park (Supplies provided by me)<br>
+          - End the night off with a sweet treat.
+        `;
+        confetti({
+          particleCount: 150,
+          spread: 100,
+          origin: { y: 0.6 }
+        });
+      }
+    }
+
+    function restart() {
+      document.getElementById('main-content').style.display = 'none';
+      document.getElementById('loader-screen').style.display = 'flex';
+      document.getElementById('spinner').style.animation = 'spin 2s linear infinite';
+    }
+  </script>
+</body>
+</html>
