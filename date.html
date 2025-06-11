@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Interactive Split Spinner</title>
+  <title>Interactive Spinner Prize</title>
   <style>
-    /* Reset and basics */
     * {
       margin: 0;
       padding: 0;
@@ -14,6 +13,7 @@
     html, body {
       height: 100%;
       font-family: Arial, sans-serif;
+      background-color: #fffbe6;
     }
 
     #loader-screen {
@@ -75,45 +75,16 @@
     #main-content {
       display: none;
       text-align: center;
-      padding: 20px;
+      padding: 40px;
     }
-  </style>
-</head>
-<body>
 
-  <!-- Loader screen with interactive halves -->
-  <div id="loader-screen">
-    <div class="split-spinner" id="spinner">
-      <div class="half-circle left" onclick="handleClick('0–5')"></div>
-      <div class="half-circle right" onclick="handleClick('6–10')"></div>
-      <div class="labels">
-        <div>0–5</div>
-        <div>6–10</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Main content -->
-  <div id="main-content">
-    <h1>Welcome!</h1>
-    <p>You clicked a half to stop the spinner.</p>
-  </div>
-
-  <script>
-    function handleClick(selection) {
-      // Stop spinner rotation
-      const spinner = document.getElementById('spinner');
-      spinner.style.animation = 'none';
-
-      // Hide loader and show main content
-      document.getElementById('loader-screen').style.display = 'none';
-      document.getElementById('main-content').style.display = 'block';
-
-      // Optionally, log the selected half
-      console.log('User clicked:', selection);
+    #prize-message {
+      font-size: 36px;
+      font-weight: bold;
+      color: red;
+      margin-top: 40px;
     }
-  </script>
 
-</body>
-</html>
+    #date-message {
+
 
