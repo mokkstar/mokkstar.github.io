@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Split Circle Spinner</title>
+  <style>
+    /* Basic reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+
+    #loader-screen {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .split-spinner {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      animation: spin 2s linear infinite;
+    }
+
+    .half-circle {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      clip: rect(0, 100px, 100px, 50px);
+      border-radius: 50%;
+    }
+
+    .left {
+      background-color: red;
+      transform: rotate(0deg);
+      clip: rect(0px, 50px, 100px, 0px);
+    }
+
+    .right {
+      background-color: green;
+      transform: rotate(0deg);
+      clip: rect(0px, 100px, 100px, 50px);
+    }
+
+    .labels {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: bold;
+      color: white;
+      padding: 0 10px;
+      pointer-events: none;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    #main-content {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loader screen with split circle -->
+  <div id="loader-screen">
+    <div class="split-spinner">
+      <div class="half-circle left"></div>
+      <div class="half-circle right"></div>
+      <div class="labels">
+        <div>0–5</div>
+        <div>6–10</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content shown after loading -->
+  <div id="main-content">
+    <h1>Welcome!</h1>
+    <p>The loading spinner with split halves has finished.</p>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader-screen').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+      }, 3000); // Adjust delay if needed
+    });
+  </script>
+
+</body>
+</html>
