@@ -87,12 +87,12 @@
     }
 
     .left {
-      background-color: red;
+      background-color: red;      /* LEFT HALF: RED for 0-5 */
       clip: rect(0px, 50%, 100%, 0px);
     }
 
     .right {
-      background-color: green;
+      background-color: green;    /* RIGHT HALF: GREEN for 6-10 */
       clip: rect(0px, 100%, 100%, 50%);
     }
 
@@ -186,6 +186,34 @@
       }
       to {
         text-shadow: 0 0 10px #d3aaff, 0 0 20px #c26fff, 0 0 30px #aa00ff;
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 400px) {
+      .intro-message {
+        font-size: 6vw;
+        margin-bottom: 4vh;
+      }
+      .split-spinner {
+        width: 80vw;
+        height: 80vw;
+        max-width: none;
+        max-height: none;
+      }
+      .labels {
+        font-size: 6vw;
+      }
+      #prize-message {
+        font-size: 7vw;
+      }
+      #date-message {
+        font-size: 5vw;
+        padding: 3vw;
+      }
+      #restart-button {
+        font-size: 5vw;
+        padding: 3vw 5vw;
       }
     }
   </style>
