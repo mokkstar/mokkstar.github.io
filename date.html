@@ -22,9 +22,20 @@
       height: 100%;
       background-color: white;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       z-index: 9999;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .intro-message {
+      font-size: 24px;
+      font-weight: bold;
+      color: purple;
+      margin-bottom: 30px;
+      max-width: 600px;
     }
 
     .split-spinner {
@@ -125,6 +136,9 @@
 
   <!-- Loader with spinner -->
   <div id="loader-screen">
+    <div class="intro-message">
+      Hello Crissy, select below a number based on how much you are feeling Mokkstar. Good Luck!
+    </div>
     <div class="split-spinner" id="spinner">
       <div class="half-circle left" onclick="handleClick('0–5')"></div>
       <div class="half-circle right" onclick="handleClick('6–10')"></div>
@@ -189,13 +203,5 @@
       document.getElementById('loader-screen').style.display = 'flex';
 
       // Restart spinner animation
-      document.getElementById('spinner').style.animation = 'spin 2s linear infinite';
+      document.getElementById('spinner').style.animation
 
-      // Clear messages
-      document.getElementById('prize-message').innerText = '';
-      document.getElementById('date-message').innerHTML = '';
-    }
-  </script>
-
-</body>
-</html>
