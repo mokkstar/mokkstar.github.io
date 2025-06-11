@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Interactive Spinner Prize</title>
   <style>
-    * {
+    html, body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
       height: 100%;
       font-family: Arial, sans-serif;
       background-color: #fffbe6;
@@ -28,9 +25,11 @@
 
     .emoji {
       position: absolute;
-      font-size: 32px;
+      font-size: 24px;
       opacity: 0.3;
       animation: spinEmoji 10s linear infinite;
+      user-select: none;
+      pointer-events: none;
     }
 
     @keyframes spinEmoji {
@@ -48,6 +47,35 @@
     .emoji:nth-child(8) { bottom: 10%; right: 10%; }
     .emoji:nth-child(9) { top: 80%; left: 10%; }
 
+    /* Sunflower emojis on spinner page */
+    #spinner-emojis {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 1; /* Above background emojis, below spinner and text */
+    }
+
+    .spinner-emoji {
+      position: absolute;
+      font-size: 30px;
+      user-select: none;
+      animation: float 6s ease-in-out infinite alternate;
+      opacity: 0.6;
+    }
+
+    .spinner-emoji:nth-child(1) { top: 15%; left: 25%; animation-delay: 0s; }
+    .spinner-emoji:nth-child(2) { top: 35%; right: 20%; animation-delay: 1.5s; }
+    .spinner-emoji:nth-child(3) { top: 60%; left: 30%; animation-delay: 3s; }
+    .spinner-emoji:nth-child(4) { top: 50%; right: 35%; animation-delay: 4.5s; }
+    .spinner-emoji:nth-child(5) { top: 25%; left: 45%; animation-delay: 2s; }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-15px); }
+    }
+
     #loader-screen {
       position: fixed;
       width: 100%;
@@ -57,58 +85,61 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 1;
+      z-index: 2;
       text-align: center;
-      padding: 20px;
+      padding: 5vw;
     }
 
     .intro-message {
-      font-size: 24px;
+      font-size: 5vw;
       font-weight: bold;
       color: purple;
-      margin-bottom: 30px;
-      max-width: 600px;
-      z-index: 2;
+      margin-bottom: 5vh;
+      max-width: 90vw;
+      z-index: 3;
     }
 
     .split-spinner {
-      width: 300px;
-      height: 300px;
+      width: 60vw;
+      height: 60vw;
       position: relative;
       animation: spin 2s linear infinite;
-      z-index: 2;
+      z-index: 3;
+      max-width: 300px;
+      max-height: 300px;
     }
 
     .half-circle {
-      width: 300px;
-      height: 300px;
+      width: 100%;
+      height: 100%;
       position: absolute;
       border-radius: 50%;
       cursor: pointer;
     }
 
     .left {
-      background-color: red;
-      clip: rect(0px, 150px, 300px, 0px);
+      background-color: red;      /* LEFT HALF: RED for 0-5 */
+      clip: rect(0px, 50%, 100%, 0px);
     }
 
     .right {
-      background-color: green;
-      clip: rect(0px, 300px, 300px, 150px);
+      background-color: green;    /* RIGHT HALF: GREEN for 6-10 */
+      clip: rect(0px, 100%, 100%, 50%);
     }
 
     .labels {
       position: absolute;
-      width: 300px;
-      height: 300px;
+      width: 100%;
+      height: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 24px;
+      font-size: 5vw;
       font-weight: bold;
       color: white;
-      padding: 0 20px;
+      padding: 0 5%;
       pointer-events: none;
+      z-index: 3;
     }
 
     @keyframes spin {
@@ -120,60 +151,60 @@
     #main-content {
       display: none;
       text-align: center;
-      padding: 40px;
+      padding: 8vw;
       z-index: 2;
       position: relative;
     }
 
     #prize-message {
-      font-size: 36px;
+      font-size: 6vw;
       font-weight: bold;
       color: red;
-      margin-top: 40px;
+      margin-top: 5vh;
     }
 
     #date-message {
-      margin-top: 40px;
-      font-size: 20px;
+      margin-top: 4vh;
+      font-size: 4vw;
       text-align: left;
-      max-width: 600px;
+      max-width: 90vw;
       margin-left: auto;
       margin-right: auto;
       background-color: #fdf4f4;
       border: 2px dashed #aaa;
-      padding: 20px;
+      padding: 4vw;
       border-radius: 12px;
       line-height: 1.6;
     }
 
     #date-message strong {
       color: #008000;
-      font-size: 22px;
+      font-size: 5vw;
     }
 
     #restart-button {
-      margin-top: 30px;
-      padding: 10px 20px;
-      font-size: 16px;
+      margin-top: 4vh;
+      padding: 2vw 4vw;
+      font-size: 4vw;
       cursor: pointer;
       background-color: #0077cc;
       color: white;
       border: none;
       border-radius: 8px;
-      transition: background-color 0.3s;
+      z-index: 3;
     }
 
     #restart-button:hover {
       background-color: #005fa3;
     }
 
-    /* Watermark style */
+    /* Glowing watermark style */
     .watermark {
       position: fixed;
-      bottom: 15px;
+      bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 16px;
+      font-size: 14px;
       color: #c78bff;
       font-style: italic;
       text-shadow: 0 0 5px #c78bff, 0 0 10px #a950ff, 0 0 15px #8f00ff;
@@ -190,11 +221,42 @@
         text-shadow: 0 0 10px #d3aaff, 0 0 20px #c26fff, 0 0 30px #aa00ff;
       }
     }
+
+    /* Responsive adjustments */
+    @media (max-width: 400px) {
+      .intro-message {
+        font-size: 6vw;
+        margin-bottom: 4vh;
+      }
+      .split-spinner {
+        width: 80vw;
+        height: 80vw;
+        max-width: none;
+        max-height: none;
+      }
+      .labels {
+        font-size: 6vw;
+      }
+      #prize-message {
+        font-size: 7vw;
+      }
+      #date-message {
+        font-size: 5vw;
+        padding: 3vw;
+      }
+      #restart-button {
+        font-size: 5vw;
+        padding: 3vw 5vw;
+      }
+      .spinner-emoji {
+        font-size: 24px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Scattered Emojis -->
+  <!-- Background Emojis -->
   <div id="emoji-background">
     <div class="emoji">🌻</div>
     <div class="emoji">🎓</div>
@@ -207,11 +269,21 @@
     <div class="emoji">🌻</div>
   </div>
 
-  <!-- Loader with spinner -->
+  <!-- Spinner Screen -->
   <div id="loader-screen">
     <div class="intro-message">
       Hello Crissy, select below a number based on how much you are feeling Mokkstar. Good Luck!
     </div>
+
+    <!-- Sunflower emojis scattered on spinner page -->
+    <div id="spinner-emojis">
+      <div class="spinner-emoji" style="top: 15%; left: 25%;">🌻</div>
+      <div class="spinner-emoji" style="top: 35%; right: 20%;">🌻</div>
+      <div class="spinner-emoji" style="top: 60%; left: 30%;">🌻</div>
+      <div class="spinner-emoji" style="top: 50%; right: 35%;">🌻</div>
+      <div class="spinner-emoji" style="top: 25%; left: 45%;">🌻</div>
+    </div>
+
     <div class="split-spinner" id="spinner">
       <div class="half-circle left" onclick="handleClick('0–5')"></div>
       <div class="half-circle right" onclick="handleClick('6–10')"></div>
@@ -222,7 +294,7 @@
     </div>
   </div>
 
-  <!-- Main content -->
+  <!-- Message Screen -->
   <div id="main-content">
     <h1>Welcome!</h1>
     <div id="prize-message"></div>
@@ -230,16 +302,21 @@
     <button id="restart-button" onclick="restart()">Restart</button>
   </div>
 
-  <!-- Confetti canvas -->
+  <!-- Confetti -->
   <canvas id="confetti-canvas" style="position: fixed; pointer-events: none; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000;"></canvas>
 
-  <!-- Glowing watermark -->
+  <!-- Watermark -->
   <div class="watermark">© Mokkstar</div>
 
-  <!-- Scripts -->
+  <!-- Confetti Script -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
     function handleClick(selection) {
+      // Add vibration on supported devices
+      if (navigator.vibrate) {
+        navigator.vibrate(200);
+      }
+
       document.getElementById('spinner').style.animation = 'none';
       document.getElementById('loader-screen').style.display = 'none';
       document.getElementById('main-content').style.display = 'block';
@@ -270,8 +347,6 @@
       document.getElementById('main-content').style.display = 'none';
       document.getElementById('loader-screen').style.display = 'flex';
       document.getElementById('spinner').style.animation = 'spin 2s linear infinite';
-      document.getElementById('prize-message').innerText = '';
-      document.getElementById('date-message').innerHTML = '';
     }
   </script>
 </body>
