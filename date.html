@@ -86,5 +86,116 @@
     }
 
     #date-message {
+      margin-top: 40px;
+      font-size: 20px;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      background-color: #fdf4f4;
+      border: 2px dashed #aaa;
+      padding: 20px;
+      border-radius: 12px;
+      line-height: 1.6;
+    }
 
+    #date-message strong {
+      color: #008000;
+      font-size: 22px;
+    }
 
+    #restart-button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    #restart-button:hover {
+      background-color: #005fa3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loader with spinner -->
+  <div id="loader-screen">
+    <div class="split-spinner" id="spinner">
+      <div class="half-circle left" onclick="handleClick('0–5')"></div>
+      <div class="half-circle right" onclick="handleClick('6–10')"></div>
+      <div class="labels">
+        <div>0–5</div>
+        <div>6–10</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div id="main-content">
+    <h1>Welcome!</h1>
+    <div id="prize-message"></div>
+    <div id="date-message"></div>
+    <button id="restart-button" onclick="restart()">Restart</button>
+  </div>
+
+  <!-- Confetti canvas -->
+  <canvas id="confetti-canvas" style="position: fixed; pointer-events: none; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000;"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    function handleClick(selection) {
+      // Stop the spinner
+      document.getElementById('spinner').style.animation = 'none';
+
+      // Hide loader and show main content
+      document.getElementById('loader-screen').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+
+      // Reset messages
+      document.getElementById('prize-message').innerText = '';
+      document.getElementById('date-message').innerHTML = '';
+
+      if (selection === '0–5') {
+        document.getElementById('prize-message').innerText = "You have won a Sonic hot dog!";
+      } else if (selection === '6–10') {
+        document.getElementById('date-message').innerHTML = `
+          <strong>Hello lovely woman,</strong><br><br>
+          Upcoming Date night with Sir Mokk.<br><br>
+          <strong>Date:</strong> Sunday, 15th of June or rescheduled date if needed<br><br>
+          <strong>Activities:</strong><br>
+          - Place: Flower Child – health is wealth!<br>
+          - Casual Paint and Sip at park (Supplies provided by me)<br>
+          - End the night off with a sweet treat.
+        `;
+
+        // Trigger confetti 🎉
+        confetti({
+          particleCount: 150,
+          spread: 100,
+          origin: { y: 0.6 }
+        });
+      }
+    }
+
+    function restart() {
+      // Reset UI
+      document.getElementById('main-content').style.display = 'none';
+      document.getElementById('loader-screen').style.display = 'flex';
+
+      // Restart spinner animation
+      document.getElementById('spinner').style.animation = 'spin 2s linear infinite';
+
+      // Clear messages
+      document.getElementById('prize-message').innerText = '';
+      document.getElementById('date-message').innerHTML = '';
+    }
+  </script>
+
+</body>
+</html>
