@@ -72,7 +72,7 @@
     .intro-message {
       font-size: 24px;
       font-weight: bold;
-      color: purple;
+      color: pink(79, 0, 128);
       margin-bottom: 30px;
       max-width: 600px;
       z-index: 2;
@@ -272,7 +272,7 @@
   <!-- Loader with spinner -->
   <div id="loader-screen" role="main">
     <div class="intro-message" id="intro-message">
-      Hello Jasmine , pick a number . Good Luck!
+      Hello Jasmine , pick a number based on how much you fw me . Good Luck!
     </div>
     <div class="split-spinner" id="spinner" aria-label="Spinner with two selectable halves">
       <div class="half-circle left" role="button" tabindex="0" aria-label="Select 0 to 5" onclick="handleClick('0-5')" onkeydown="if(event.key==='Enter') handleClick('0-5')"></div>
@@ -322,16 +322,16 @@
         document.getElementById('prize-message').innerText = "You have won a Sonic hot dog!";
       } else if (selection === '6-10') {
         document.getElementById('date-message').innerHTML = `
-          <strong>Hello Fine Jamaican Ting,</strong>
+          <strong>hey lil mamas!,</strong>
 
-          Upcoming Date night with Sir Mokk.
+          would luvvv for you to go out with me.
 
           <strong>Date:</strong> AN Agreed upon date between the both of us.
 
           <strong>Activities:</strong>
           - Place: HMMMM – suprise spot!
           - Flowers Provided
-          - End the night off with a sweet treat.
+          - End the night off with lil some sweet .
         `;
 
         confetti({
