@@ -1,3 +1,45 @@
+/* --- Tech Style Header --- */
+.tech-header {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #0f111a;
+    border-bottom: 2px solid #00ffff;
+    box-shadow: 0 4px 20px rgba(0, 255, 255, 0.2);
+    margin-bottom: 40px;
+}
+
+.tech-header h1 {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 3rem;
+    color: #00ffff;
+    text-shadow: 
+        0 0 5px #00ffff,
+        0 0 10px #00ffff,
+        0 0 20px #00ffff,
+        0 0 40px #00cccc;
+    animation: flicker 2s infinite;
+}
+
+.tech-header p {
+    font-family: 'Courier New', Courier, monospace;
+    color: #b0b0b0;
+    font-size: 1.2rem;
+    margin-top: 15px;
+}
+
+/* --- Neon Flicker Animation --- */
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        text-shadow: 
+            0 0 5px #00ffff,
+            0 0 10px #00ffff,
+            0 0 20px #00ffff,
+            0 0 40px #00cccc;
+    }
+    20%, 22%, 24%, 55% {
+        text-shadow: none;
+    }
+}
 /* --- Global Styling --- */
 html, body {
     margin: 0;
